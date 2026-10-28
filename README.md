@@ -7,6 +7,8 @@ Local control of **WiZ dual-zone bulbs** (bulbs with a separately controllable m
 light and outer "ring"/halo) from Hubitat, with each zone as its own full color light,
 plus fast **groups** for switching many lights at once.
 
+Questions and feedback: [Hubitat Community thread](https://community.hubitat.com/t/release-wiz-dual-zone-improved-app-driver-for-wiz-dual-zone-bulbs/167101).
+
 ## Why this exists
 
 The built-in Hubitat WiZ integration can control the ring zone, but it's slow and
