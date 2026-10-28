@@ -1,6 +1,9 @@
 /**
  *  WiZ Dual Zone Group (app)
  *
+ *  Version 0.3.3
+ *  https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone (MIT License)
+ *
  *  Groups any number of "WiZ Dual Zone Light" zone devices behind one light
  *  device. A command on the group device sends one UDP packet per bulb in a
  *  single tight loop, so all bulbs change at (nearly) the same moment instead
@@ -54,6 +57,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 definition(
         name: "WiZ Dual Zone Group",
+        importUrl: "https://raw.githubusercontent.com/youzer-name/Hubitat-Wiz_Dual_Zone/main/WizDualZoneGroupApp.groovy",
         namespace: "youzer-name",
         author: "youzer-name",
         description: "Control many WiZ dual-zone lights at once through one group device",

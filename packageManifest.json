@@ -1,12 +1,12 @@
 {
   "packageName": "WiZ Dual Zone",
   "author": "youzer-name",
-  "version": "0.3.2",
-  "minimumHEVersion": "2.3.0",
+  "version": "0.3.3",
+  "minimumHEVersion": "2.5.2",
   "dateReleased": "2026-10-28",
   "documentationLink": "https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone#readme",
   "communityLink": "",
-  "releaseNotes": "After install, HPM's 'configure' option now opens WiZ Dual Zone Discovery (the first setup step) instead of the group app.",
+  "releaseNotes": "Adds version numbers and Import URLs to the code; requires hub firmware 2.5.2 or later.",
   "apps": [
     {
       "id": "38cced42-b712-4ca1-81ca-55501d08cec0",

@@ -40,10 +40,12 @@ integration (and the `pywizlight` library it uses) does:
 1. **Give every bulb a fixed IP address.** Add a DHCP reservation for each bulb in
    your router. The drivers find bulbs by IP; if a bulb's IP changes, it shows
    *offline* until you update/rediscover it.
-2. **Make a list of bulb IPs and names.** Your router's DHCP list, the bult-in WiZ integration, or an existing Hubitat WiZ device's name ("Wiz ... on
+2. **Make a list of bulb IPs and names.** Your router's DHCP list, the built-in WiZ integration, or an existing Hubitat WiZ device's name ("Wiz ... on
    192.168.x.x") will show them.  Alternatively, you can use the 'flash' command during discovery to identify bulbs before this app creates the devices.
-3. **The hub should be on the same network/subnet as the bulbs.** UDP replies don't
-   cross subnets on most routers.  Discovery only works within the hub's subnet.
+3. **The hub should be on the same network/subnet as the bulbs.** Discovery only checks
+   addresses that match the hub's first three numbers (for example 192.168.1.1–254 when
+   the hub is 192.168.1.x). Bulbs elsewhere have to be added by hand, and only work if
+   your router passes UDP traffic between the networks.
 
 ## Setup
 
@@ -61,7 +63,7 @@ version is released.
 
 When HPM offers to configure the package after installing, it opens **WiZ Dual Zone
 Discovery**, which is Step 2 below. Click **Done** once to install it, open it again, and
-search. Set up groups (Step 3) only after the bulbs devices have been created.
+search. Set up groups (Step 3) only after the bulb devices have been created.
 
 **Option B: By hand**
 
@@ -78,11 +80,12 @@ Install the zone driver (`WizDualZoneLight`) before you create any bulb devices.
 
 **Option A: Discovery (recommended)**
 
-1. **Apps → Add User App → WiZ Dual Zone Discovery**.
+1. **Apps → Add User App → WiZ Dual Zone Discovery**. If the app asks you to click
+   **Done** first, do that and open it again.
 2. Click **Search for bulbs**. The app checks every address on the hub's subnet,
    which takes about 40 seconds.
-3. Under **New dual-zone bulbs**, name each bulb. **Flash** blinks a bulb so you
-   can tell which one it is.
+3. Under **New dual-zone bulbs**, name each bulb. **Flash** blinks a bulb (three times,
+   leaving it on) so you can tell which one it is.
 4. Click **Create selected devices**, then **Done**.
 
 Each bulb device is remembered by its MAC address. If a bulb gets a new IP address,
@@ -161,7 +164,7 @@ The bulb device has **on/off for both zones together**, **Refresh**, and a
   next poll.
 - **Transition times are ignored.** WiZ's local protocol has no fade/duration setting.
 - **"Rhythm" and WiZ custom modes** aren't in the effect list.
-- After a group command, a **preant/bulb device's own on/off status** (not the child devices')
+- After a group command, a **parent (bulb) device's own on/off status** (not the child devices')
   updates at its next poll.
 
 ## Troubleshooting

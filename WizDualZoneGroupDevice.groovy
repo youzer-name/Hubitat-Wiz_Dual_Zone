@@ -1,12 +1,16 @@
 /**
  *  WiZ Dual Zone Group (device driver)
  *
+ *  Version 0.3.3
+ *  https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone (MIT License)
+ *
  *  The light device for a "WiZ Dual Zone Group" app instance. Every command is
  *  handed to the app, which sends to all member zones at once.
  */
 
 metadata {
-    definition(name: "WiZ Dual Zone Group", namespace: "youzer-name", author: "youzer-name") {
+    definition(name: "WiZ Dual Zone Group", namespace: "youzer-name", author: "youzer-name",
+            importUrl: "https://raw.githubusercontent.com/youzer-name/Hubitat-Wiz_Dual_Zone/main/WizDualZoneGroupDevice.groovy") {
         capability "Actuator"
         capability "Light"
         capability "Switch"

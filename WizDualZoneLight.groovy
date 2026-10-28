@@ -1,6 +1,9 @@
 /**
  *  WiZ Dual Zone Light (child driver)
  *
+ *  Version 0.3.3
+ *  https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone (MIT License)
+ *
  *  One zone (main or ring) of a dual-zone WiZ bulb. Created automatically by
  *  the "WiZ Dual Zone Bulb" parent driver; all bulb communication goes
  *  through the parent.
@@ -12,7 +15,8 @@ import groovy.transform.Field
 @Field static final String NAMESPACE = "youzer-name"
 
 metadata {
-    definition(name: "WiZ Dual Zone Light", namespace: "youzer-name", author: "youzer-name") {
+    definition(name: "WiZ Dual Zone Light", namespace: "youzer-name", author: "youzer-name",
+            importUrl: "https://raw.githubusercontent.com/youzer-name/Hubitat-Wiz_Dual_Zone/main/WizDualZoneLight.groovy") {
         capability "Actuator"
         capability "Light"
         capability "Switch"

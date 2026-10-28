@@ -1,6 +1,9 @@
 /**
  *  WiZ Dual Zone Bulb (parent driver)
  *
+ *  Version 0.3.3
+ *  https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone (MIT License)
+ *
  *  Talks to one dual-zone WiZ bulb over local UDP (port 38899) and creates two
  *  child lights: Zone 1 (main/center) and Zone 2 (ring/halo).
  *
@@ -53,7 +56,8 @@ import java.util.concurrent.ConcurrentHashMap
 ]
 
 metadata {
-    definition(name: "WiZ Dual Zone Bulb", namespace: "youzer-name", author: "youzer-name") {
+    definition(name: "WiZ Dual Zone Bulb", namespace: "youzer-name", author: "youzer-name",
+            importUrl: "https://raw.githubusercontent.com/youzer-name/Hubitat-Wiz_Dual_Zone/main/WizDualZoneBulb.groovy") {
         capability "Actuator"
         capability "Switch"
         capability "Refresh"

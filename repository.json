@@ -1,0 +1,18 @@
+{
+  "author": "youzer-name",
+  "gitHubUrl": "https://github.com/youzer-name",
+  "packages": [
+    {
+      "name": "WiZ Dual Zone",
+      "category": "Integrations",
+      "location": "https://raw.githubusercontent.com/youzer-name/Hubitat-Wiz_Dual_Zone/main/packageManifest.json",
+      "description": "Local control of WiZ dual-zone bulbs: separate Main and Ring devices, discovery, and fast multi-bulb groups.",
+      "tags": [
+        "LAN",
+        "Lights & Switches",
+        "Automations & Groups"
+      ],
+      "id": "c71046ce-7ca6-4299-a24e-1d9690bcf1d7"
+    }
+  ]
+}

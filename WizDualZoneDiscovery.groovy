@@ -1,6 +1,9 @@
 /**
  *  WiZ Dual Zone Discovery (app)
  *
+ *  Version 0.3.3
+ *  https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone (MIT License)
+ *
  *  Finds WiZ dual-zone bulbs on the local network and creates a
  *  "WiZ Dual Zone Bulb" device for each one you pick.
  *
@@ -34,6 +37,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 definition(
         name: "WiZ Dual Zone Discovery",
+        importUrl: "https://raw.githubusercontent.com/youzer-name/Hubitat-Wiz_Dual_Zone/main/WizDualZoneDiscovery.groovy",
         namespace: "youzer-name",
         author: "youzer-name",
         description: "Find WiZ dual-zone bulbs on your network and create their devices",
