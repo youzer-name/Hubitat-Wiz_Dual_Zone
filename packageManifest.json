@@ -1,22 +1,13 @@
 {
   "packageName": "WiZ Dual Zone",
   "author": "youzer-name",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "minimumHEVersion": "2.3.0",
   "dateReleased": "2026-10-28",
   "documentationLink": "https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone#readme",
   "communityLink": "",
-  "releaseNotes": "Discovery asks you to click Done before the first search (Hubitat doesn't run an app's scheduled jobs until it's installed). Adds the MIT license.",
+  "releaseNotes": "After install, HPM's 'configure' option now opens WiZ Dual Zone Discovery (the first setup step) instead of the group app.",
   "apps": [
-    {
-      "id": "b3de78e7-b050-4476-8c75-89cbb2c05033",
-      "name": "WiZ Dual Zone Group",
-      "namespace": "youzer-name",
-      "location": "https://raw.githubusercontent.com/youzer-name/Hubitat-Wiz_Dual_Zone/main/WizDualZoneGroupApp.groovy",
-      "required": true,
-      "oauth": false,
-      "primary": true
-    },
     {
       "id": "38cced42-b712-4ca1-81ca-55501d08cec0",
       "name": "WiZ Dual Zone Discovery",
@@ -25,6 +16,15 @@
       "required": true,
       "oauth": false,
       "primary": true
+    },
+    {
+      "id": "b3de78e7-b050-4476-8c75-89cbb2c05033",
+      "name": "WiZ Dual Zone Group",
+      "namespace": "youzer-name",
+      "location": "https://raw.githubusercontent.com/youzer-name/Hubitat-Wiz_Dual_Zone/main/WizDualZoneGroupApp.groovy",
+      "required": true,
+      "oauth": false,
+      "primary": false
     }
   ],
   "drivers": [

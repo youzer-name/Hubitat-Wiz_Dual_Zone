@@ -61,6 +61,10 @@ integration (and the `pywizlight` library it uses) does:
 HPM installs all three drivers and both apps, and offers updates when a new
 version is released.
 
+When HPM offers to configure the package after installing, it opens **WiZ Dual Zone
+Discovery**, which is Step 2 below. Click **Done** once to install it, open it again, and
+search. Set up groups (Step 3) only after the bulbs have devices.
+
 **Option B: By hand**
 
 In the Hubitat web UI:
