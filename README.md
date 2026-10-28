@@ -1,6 +1,6 @@
 # WiZ Dual Zone for Hubitat
 
-> **Draft.** Tested on a Hubitat C7 (firmware 2.5.2) with 22 WiZ dual-zone bulbs
+> Tested on a Hubitat C7 (firmware 2.5.2) with 22 WiZ dual-zone bulbs
 > (module `ESP20_DHRGB_01`, firmware 1.38–1.39).
 
 Local control of **WiZ dual-zone bulbs** (bulbs with a separately controllable main
@@ -15,37 +15,35 @@ package talks to the bulbs the same way the
 [ha-wiz-dualzone](https://github.com/chadkuester/ha-wiz-dualzone) Home Assistant
 integration (and the `pywizlight` library it uses) does:
 
-- **Local only.** Plain UDP on your LAN (port 38899); no cloud, no WiZ account.
+- **Local only.** Plain UDP on your LAN (port 38899)
 - **Two zone devices per bulb.** Main and Ring, each with on/off, dimming, color,
   color temperature, and the built-in WiZ effects (with a dropdown and adjustable speed).
 - **Reliable delivery.** Each bulb gets one message at a time, every message is
   confirmed by the bulb, and unconfirmed ones are resent quickly.
 - **Fast groups.** Hubitat apps like Room Lighting command lights one after another
-  (about 60 ms apart on a C7, so a room "ripples" on). A WiZ group sends to every
-  bulb in one quick loop (9 bulbs in about 60 ms total), close to how Home Assistant
-  behaves.
+  which can result in a "ripple" effect. A WiZ group created with this app sends to every
+  bulb in one quick loop.
 
 ## What's in the package
 
 | File | Type | Purpose |
 |---|---|---|
-| `WizDualZoneBulb.groovy` | Driver | One device per bulb. Talks to the bulb and creates its two zone devices. |
+| `WizDualZoneBulb.groovy` | Driver | One device per bulb. Talks to the bulb and creates two child devices (main/ring). |
 | `WizDualZoneLight.groovy` | Driver | A zone (Main or Ring). Created automatically by the bulb device. |
 | `WizDualZoneGroupApp.groovy` | App | One instance per group. Sends to all member zones at once. |
 | `WizDualZoneGroupDevice.groovy` | Driver | The light device each group app creates. |
-| `WizDualZoneDiscovery.groovy` | App | Finds the bulbs on your network and creates their devices. Keeps their IP addresses up to date. |
+| `WizDualZoneDiscovery.groovy` | App | Finds the bulbs on your network and creates their devices. Static IPs are recommended.  Re-running discovery will update devices by MAC address. |
 | `packageManifest.json` | HPM manifest | Lets Hubitat Package Manager install and update the package. |
 
 ## Before you start
 
 1. **Give every bulb a fixed IP address.** Add a DHCP reservation for each bulb in
    your router. The drivers find bulbs by IP; if a bulb's IP changes, it shows
-   *offline* until you update it.
-2. **Make a list of bulb IPs and names.** Your router's DHCP list, the WiZ app
-   (device settings), or an existing Hubitat WiZ device's name ("Wiz ... on
-   192.168.x.x") will show them.
-3. **The hub must be on the same network/subnet as the bulbs.** UDP replies don't
-   cross most routers.
+   *offline* until you update/rediscover it.
+2. **Make a list of bulb IPs and names.** Your router's DHCP list, the bult-in WiZ integration, or an existing Hubitat WiZ device's name ("Wiz ... on
+   192.168.x.x") will show them.  Alternatively, you can use the 'flash' command during discovery to identify bulbs before this app creates the devices.
+3. **The hub should be on the same network/subnet as the bulbs.** UDP replies don't
+   cross subnets on most routers.  Discovery only works within the hub's subnet.
 
 ## Setup
 
@@ -63,7 +61,7 @@ version is released.
 
 When HPM offers to configure the package after installing, it opens **WiZ Dual Zone
 Discovery**, which is Step 2 below. Click **Done** once to install it, open it again, and
-search. Set up groups (Step 3) only after the bulbs have devices.
+search. Set up groups (Step 3) only after the bulbs devices have been created.
 
 **Option B: By hand**
 
@@ -88,7 +86,7 @@ Install the zone driver (`WizDualZoneLight`) before you create any bulb devices.
 4. Click **Create selected devices**, then **Done**.
 
 Each bulb device is remembered by its MAC address. If a bulb gets a new IP address,
-open the app and search again; its device is pointed at the new address.
+open the app and search again; its device will be updated to point to the new address.
 
 Bulb devices you created by hand (Option B) can be added under **Bulb devices you
 created by hand**, so searches keep their addresses up to date too.
@@ -103,7 +101,7 @@ For each bulb:
 3. On the new device page, under **Preferences**, enter the bulb's **IP address**
    and click **Save Preferences**.
 
-The bulb device then creates two zone devices, `<name> Main` and `<name> Ring`,
+The bulb device then creates two child devices, `<name> Main` and `<name> Ring`,
 and reads their current state from the bulb. Its **healthStatus** should change
 to `online` within a few seconds.
 
@@ -113,7 +111,7 @@ Optional settings on the bulb device:
 |---|---|---|
 | Poll bulb state every | 1 minute | Picks up changes made in the WiZ app or by other hubs. |
 | Lowest brightness % | 10 | WiZ bulbs report 10% as their minimum. |
-| Zone name suffixes | Main / Ring | Used only when the zones are first created; after that, just rename the zone devices. |
+| Zone name suffixes | Main / Ring | Used only when the zones are first created; after that, just rename the child devices. |
 | Re-read state after each command | Off | Extra traffic; the bulb's confirmation is normally enough. |
 | Debug logging | Off | Turns itself off after 30 minutes. |
 
@@ -127,24 +125,15 @@ kitchen"):
 3. Select the **zone lights** for the group, then click **Done**.
 
 A light device with the group's name appears. Use it in Room Lighting, dashboards,
-and rules **in place of the individual zones**.
+and rules **in place of the individual devices**.
 
 - If both zones of a bulb are in the same group, they share a single message.
-- Member zone devices update as each bulb confirms the change.
+- Child devices update as each bulb confirms the change.
 - The group shows **on** whenever any member is on. Its brightness is the average of
   the members that are on. Its color, color temperature and effect follow the members
   when all the ones that are on match; otherwise it keeps the last value it had.
 
-### Step 4 (optional): Share with another hub
-
-To control the lights from a second hub (e.g. a C8 Pro), share the **group
-devices** with **Hub Mesh**. The other hub needs no code from this package.
-
-Keep the bulbs, groups, and any Room Lighting instances that use them on the hub
-the bulbs are installed on. If the other hub commands many individually shared
-zones, each one makes its own trip across the network, which brings the ripple back.
-
-### Step 5: Retire the old WiZ devices
+### Step 4: Retire the old WiZ devices if previously configured
 
 When your rules use the new devices, disable or remove the bulbs' old devices from
 the built-in WiZ integration, so two integrations aren't polling the same bulbs.
@@ -160,7 +149,7 @@ Every zone and group device supports:
   Effect*, *Set Effect Speed* (10 slow to 200 fast). The effect list is in the
   `lightEffects` attribute.
 
-Zone devices also have **Set RGBW** for raw channel values (0–255 each).
+Child devices also have **Set RGBW** for raw channel values (0–255 each).
 
 The bulb device has **on/off for both zones together**, **Refresh**, and a
 **healthStatus** attribute (`online`/`offline`).
@@ -172,7 +161,7 @@ The bulb device has **on/off for both zones together**, **Refresh**, and a
   next poll.
 - **Transition times are ignored.** WiZ's local protocol has no fade/duration setting.
 - **"Rhythm" and WiZ custom modes** aren't in the effect list.
-- After a group command, a **bulb device's own on/off status** (not the zone devices')
+- After a group command, a **preant/bulb device's own on/off status** (not the child devices')
   updates at its next poll.
 
 ## Troubleshooting
