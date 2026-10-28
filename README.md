@@ -33,7 +33,8 @@ integration (and the `pywizlight` library it uses) does:
 | `WizDualZoneLight.groovy` | Driver | A zone (Main or Ring). Created automatically by the bulb device. |
 | `WizDualZoneGroupApp.groovy` | App | One instance per group. Sends to all member zones at once. |
 | `WizDualZoneGroupDevice.groovy` | Driver | The light device each group app creates. |
-| `WizDualZoneManager.groovy` | App (optional, untested) | Creates many bulb devices from a list of IP addresses. |
+| `WizDualZoneManager.groovy` | App (optional, untested) | Creates many bulb devices from a list of IP addresses. Not included in the HPM package yet. |
+| `packageManifest.json` | HPM manifest | Lets Hubitat Package Manager install and update the package. |
 
 ## Before you start
 
@@ -49,6 +50,18 @@ integration (and the `pywizlight` library it uses) does:
 ## Setup
 
 ### Step 1: Install the code
+
+**Option A: Hubitat Package Manager (HPM)**
+
+1. In HPM, choose **Install → From a URL**.
+2. Enter
+   `https://raw.githubusercontent.com/youzer-name/Hubitat-Wiz_Dual_Zone/main/packageManifest.json`
+   and follow the prompts.
+
+HPM installs all three drivers and the group app, and offers updates when a new
+version is released.
+
+**Option B: By hand**
 
 In the Hubitat web UI:
 
