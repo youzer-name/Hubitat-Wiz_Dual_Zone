@@ -1,7 +1,7 @@
 /**
  *  WiZ Dual Zone Discovery (app)
  *
- *  Version 1.0.0
+ *  Version 1.0.1
  *  https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone (MIT License)
  *
  *  Finds WiZ dual-zone bulbs on the local network and creates a
@@ -29,6 +29,8 @@ import java.util.concurrent.ConcurrentHashMap
 // Scan pacing: BATCH addresses every BATCH_MS, each waiting up to 1 s for a reply.
 @Field static final int BATCH = 8
 @Field static final int BATCH_MS = 1200
+// Gap between setting up each new bulb device.
+@Field static final int CREATE_GAP_MS = 2000
 
 // Bulbs heard during the current search. Key: MAC (lowercase, no colons).
 @Field static final ConcurrentHashMap<String, Map> FOUND = new ConcurrentHashMap()
@@ -53,8 +55,11 @@ preferences {
 
 def mainPage() {
     boolean searching = state.searching && now() < ((state.searchEnds ?: 0) as long) + 10000
+    int creating = ((state.createQueue ?: []) as List).size()
+    // Restart a creation queue that stalled (for example, the hub restarted).
+    if (creating && now() - ((state.createLast ?: 0) as long) > 15000) runInMillis(100, "createNext")
     dynamicPage(name: "mainPage", title: "WiZ Dual Zone Discovery", install: true, uninstall: true,
-            refreshInterval: searching ? 2 : 0) {
+            refreshInterval: (searching || creating) ? 2 : 0) {
         section {
             paragraph "The hub must be on the same network as the bulbs. Give each bulb a fixed IP " +
                     "address (a DHCP reservation in your router) if you can; if one changes, run a " +
@@ -63,6 +68,8 @@ def mainPage() {
                 // Hubitat doesn't run an app's scheduled jobs until it's installed,
                 // and the search depends on them.
                 paragraph "<b>Click Done to finish installing this app, then open it again to search.</b>"
+            } else if (creating) {
+                paragraph "<b>Creating devices...</b> ${creating} bulb(s) to go, about 2 seconds each."
             } else if (searching) {
                 paragraph "<b>Searching...</b> checked ${PROGRESS.get('n') ?: 0} of 254 addresses; " +
                         "${FOUND.size()} WiZ device(s) found so far. This takes about 40 seconds."
@@ -70,7 +77,7 @@ def mainPage() {
                 input name: "btnSearch", type: "button", title: "Search for bulbs"
             }
         }
-        if (searching) return
+        if (searching || creating) return
 
         Map found = (state.found ?: [:]) as Map
         Map known = knownBulbs()
@@ -270,24 +277,47 @@ private void applyIpChanges(Map found) {
     state.ipChanges = changes
 }
 
+// Bulbs are set up one at a time, a couple of seconds apart. Creating many
+// at once (each makes two zone devices and contacts its bulb) can overload
+// the hub and leave some half set up.
 void createSelected() {
     Map found = (state.found ?: [:]) as Map
     Map known = knownBulbs()
+    List queue = (state.createQueue ?: []) as List
     found.each { String mac, Map b ->
         if (!isDualZone(b.model as String) || known[mac]) return
         if (settings["add_${mac}"] == false) return
+        if (queue.any { it.mac == mac }) return
         String label = (settings["label_${mac}"] ?: defaultLabel(mac)).toString().trim()
-        String dni = "wiz-${mac}"
+        queue << [mac: mac, ip: b.ip, label: label]
+    }
+    state.createQueue = queue
+    state.createLast = now()
+    if (queue) runInMillis(100, "createNext")
+}
+
+void createNext() {
+    List queue = (state.createQueue ?: []) as List
+    if (!queue) return
+    Map n = queue.remove(0) as Map
+    state.createQueue = queue
+    state.createLast = now()
+    String mac = n.mac
+    String dni = "wiz-${mac}"
+    try {
         def dev = getChildDevice(dni)
         if (!dev) {
-            dev = addChildDevice(NAMESPACE, BULB_DRIVER, dni, [name: BULB_DRIVER, label: label, isComponent: false])
-            log.info "WiZ discovery: created ${label} for ${b.ip}"
+            dev = addChildDevice(NAMESPACE, BULB_DRIVER, dni, [name: BULB_DRIVER, label: n.label, isComponent: false])
+            log.info "WiZ discovery: created ${n.label} for ${n.ip}"
         }
         dev.updateDataValue("mac", mac)
-        dev.setIpAddress(b.ip as String)
+        dev.setIpAddress(n.ip as String)
         app.removeSetting("add_${mac}")
         app.removeSetting("label_${mac}")
+    } catch (e) {
+        log.warn "WiZ discovery: couldn't create ${n.label} (${n.ip}): ${e.message}. Search again to retry."
     }
+    if (queue) runInMillis(CREATE_GAP_MS, "createNext")
 }
 
 // Blink a bulb (both zones) three times. It ends up on.

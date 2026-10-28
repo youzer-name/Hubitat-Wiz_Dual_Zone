@@ -1,7 +1,7 @@
 /**
  *  WiZ Dual Zone Group (app)
  *
- *  Version 1.0.0
+ *  Version 1.0.1
  *  https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone (MIT License)
  *
  *  Groups any number of "WiZ Dual Zone Light" zone devices behind one light

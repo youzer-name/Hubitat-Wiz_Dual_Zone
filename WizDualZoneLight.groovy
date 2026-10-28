@@ -1,7 +1,7 @@
 /**
  *  WiZ Dual Zone Light (child driver)
  *
- *  Version 1.0.0
+ *  Version 1.0.1
  *  https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone (MIT License)
  *
  *  One zone (main or ring) of a dual-zone WiZ bulb. Created automatically by

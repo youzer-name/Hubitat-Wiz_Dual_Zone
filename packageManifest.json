@@ -1,12 +1,12 @@
 {
   "packageName": "WiZ Dual Zone",
   "author": "youzer-name",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "minimumHEVersion": "2.5.2",
   "dateReleased": "2026-10-28",
   "documentationLink": "https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone#readme",
   "communityLink": "",
-  "releaseNotes": "First public release.",
+  "releaseNotes": "Discovery sets up new bulbs one at a time, so creating many at once no longer overloads the hub.",
   "apps": [
     {
       "id": "38cced42-b712-4ca1-81ca-55501d08cec0",
