@@ -98,6 +98,7 @@ void initialize() {
     dev.parse([[name: "lightEffects", value: JsonOutput.toJson(SCENES.collectEntries { k, v -> [(k.toString()): v] })]])
     buildMembers()
     subscribe(zones, "switch", "memberSwitchHandler")
+    subscribe(zones, "bulbIp", "memberIpHandler")
     memberSwitchHandler(null)
     if (logEnable) runIn(1800, "logsOff")
 }
@@ -125,6 +126,12 @@ private Map buildMembers() {
     }
     MEMBERS.put(appKey(), byIp)
     return byIp
+}
+
+// A member bulb moved to a new IP address: rebuild the membership cache.
+void memberIpHandler(evt) {
+    log.info "${app.label}: ${evt.displayName} is now at ${evt.value}"
+    buildMembers()
 }
 
 private Map members() { MEMBERS.get(appKey()) ?: buildMembers() }

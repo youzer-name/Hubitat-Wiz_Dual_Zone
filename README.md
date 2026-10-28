@@ -33,7 +33,7 @@ integration (and the `pywizlight` library it uses) does:
 | `WizDualZoneLight.groovy` | Driver | A zone (Main or Ring). Created automatically by the bulb device. |
 | `WizDualZoneGroupApp.groovy` | App | One instance per group. Sends to all member zones at once. |
 | `WizDualZoneGroupDevice.groovy` | Driver | The light device each group app creates. |
-| `WizDualZoneManager.groovy` | App (optional, untested) | Creates many bulb devices from a list of IP addresses. Not included in the HPM package yet. |
+| `WizDualZoneDiscovery.groovy` | App | Finds the bulbs on your network and creates their devices. Keeps their IP addresses up to date. |
 | `packageManifest.json` | HPM manifest | Lets Hubitat Package Manager install and update the package. |
 
 ## Before you start
@@ -58,7 +58,7 @@ integration (and the `pywizlight` library it uses) does:
    `https://raw.githubusercontent.com/youzer-name/Hubitat-Wiz_Dual_Zone/main/packageManifest.json`
    and follow the prompts.
 
-HPM installs all three drivers and the group app, and offers updates when a new
+HPM installs all three drivers and both apps, and offers updates when a new
 version is released.
 
 **Option B: By hand**
@@ -68,10 +68,28 @@ In the Hubitat web UI:
 1. **Drivers Code → New Driver**, paste `WizDualZoneLight.groovy`, **Save**.
 2. Repeat for `WizDualZoneBulb.groovy` and `WizDualZoneGroupDevice.groovy`.
 3. **Apps Code → New App**, paste `WizDualZoneGroupApp.groovy`, **Save**.
+4. Repeat for `WizDualZoneDiscovery.groovy`.
 
 Install the zone driver (`WizDualZoneLight`) before you create any bulb devices.
 
-### Step 2: Add each bulb
+### Step 2: Add the bulbs
+
+**Option A: Discovery (recommended)**
+
+1. **Apps → Add User App → WiZ Dual Zone Discovery**.
+2. Click **Search for bulbs**. The app checks every address on the hub's subnet,
+   which takes about 40 seconds.
+3. Under **New dual-zone bulbs**, name each bulb. **Flash** blinks a bulb so you
+   can tell which one it is.
+4. Click **Create selected devices**, then **Done**.
+
+Each bulb device is remembered by its MAC address. If a bulb gets a new IP address,
+open the app and search again; its device is pointed at the new address.
+
+Bulb devices you created by hand (Option B) can be added under **Bulb devices you
+created by hand**, so searches keep their addresses up to date too.
+
+**Option B: By hand**
 
 For each bulb:
 

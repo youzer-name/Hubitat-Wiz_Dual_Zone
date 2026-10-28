@@ -26,6 +26,7 @@ metadata {
 
         attribute "effectSpeed", "number"
         attribute "RGBW", "string"
+        attribute "bulbIp", "string"
         attribute "healthStatus", "enum", ["online", "offline", "unknown"]
 
         // Keep in sync with SCENES in the bulb driver.

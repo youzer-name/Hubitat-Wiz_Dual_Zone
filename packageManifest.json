@@ -1,18 +1,27 @@
 {
   "packageName": "WiZ Dual Zone",
   "author": "youzer-name",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "minimumHEVersion": "2.3.0",
   "dateReleased": "2026-10-28",
   "documentationLink": "https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone#readme",
   "communityLink": "",
-  "releaseNotes": "First release: local UDP control of WiZ dual-zone bulbs (separate Main and Ring zone devices) and fast multi-bulb groups.",
+  "releaseNotes": "Adds WiZ Dual Zone Discovery: finds dual-zone bulbs on the network, creates their devices, and follows IP address changes by MAC.",
   "apps": [
     {
       "id": "b3de78e7-b050-4476-8c75-89cbb2c05033",
       "name": "WiZ Dual Zone Group",
       "namespace": "youzer-name",
       "location": "https://raw.githubusercontent.com/youzer-name/Hubitat-Wiz_Dual_Zone/main/WizDualZoneGroupApp.groovy",
+      "required": true,
+      "oauth": false,
+      "primary": true
+    },
+    {
+      "id": "38cced42-b712-4ca1-81ca-55501d08cec0",
+      "name": "WiZ Dual Zone Discovery",
+      "namespace": "youzer-name",
+      "location": "https://raw.githubusercontent.com/youzer-name/Hubitat-Wiz_Dual_Zone/main/WizDualZoneDiscovery.groovy",
       "required": true,
       "oauth": false,
       "primary": true

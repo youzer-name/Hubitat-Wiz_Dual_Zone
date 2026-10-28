@@ -63,6 +63,8 @@ metadata {
         attribute "healthStatus", "enum", ["online", "offline", "unknown"]
 
         command "createZoneDevices"
+        // Used by WiZ Dual Zone Discovery when a bulb's address changes.
+        command "setIpAddress", [[name: "IP address*", type: "STRING"]]
     }
 
     preferences {
@@ -111,6 +113,14 @@ void initialize() {
     schedulePoll()
 }
 
+void setIpAddress(String ip) {
+    ip = ip?.trim()
+    if (!ip || ip == ipAddress) return
+    log.info "${device.displayName}: IP address changed from ${ipAddress ?: 'none'} to ${ip}"
+    device.updateSetting("ipAddress", [value: ip, type: "text"])
+    runInMillis(200, "initialize")
+}
+
 void uninstalled() {
     resetQueue()
     unschedule()
@@ -134,6 +144,7 @@ void createZoneDevices() {
         child.updateDataValue("zone", "${zone}")
         child.updateDataValue("ip", "${ipAddress}")
         sendZoneEvents(zone, [
+                [name: "bulbIp", value: "${ipAddress}"],
                 [name: "lightEffects", value: JsonOutput.toJson(SCENES.collectEntries { k, v -> [(k.toString()): v] })],
         ])
     }
