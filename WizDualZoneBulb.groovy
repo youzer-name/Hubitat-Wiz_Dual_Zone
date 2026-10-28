@@ -1,7 +1,7 @@
 /**
  *  WiZ Dual Zone Bulb (parent driver)
  *
- *  Version 0.3.4
+ *  Version 0.3.5
  *  https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone (MIT License)
  *
  *  Talks to one dual-zone WiZ bulb over local UDP (port 38899) and creates two
@@ -42,6 +42,10 @@ import java.util.concurrent.ConcurrentHashMap
 @Field static final ConcurrentHashMap<String, Map> INFLIGHT = new ConcurrentHashMap()
 @Field static final ConcurrentHashMap<String, Object> LOCKS = new ConcurrentHashMap()
 @Field static final ConcurrentHashMap<String, Integer> MSG_IDS = new ConcurrentHashMap()
+// Last known on/off of each zone ("<device id>-<zone>") and of the bulb device
+// itself. Kept in memory because a zone's new value may not be readable from
+// the hub yet when the bulb device rechecks right after it changes.
+@Field static final ConcurrentHashMap<String, String> ZONE_SWITCH = new ConcurrentHashMap()
 
 // Built-in WiZ scenes (Rhythm/1000 is app-only and can't be set, so it's left out).
 @Field static final Map<Integer, String> SCENES = [
@@ -519,13 +523,24 @@ private void sendZoneEvents(int zone, List evts) {
     def child = getChildDevice(zoneDni(zone))
     if (!child) return
     child.parse(evts)
-    if (evts.any { it.name == "switch" }) updateParentSwitch()
+    Map sw = evts.find { it.name == "switch" } as Map
+    if (sw) updateParentSwitch(zone, "${sw.value}")
 }
 
-void updateParentSwitch() {
-    boolean anyOn = getChildDevices().any { it.currentValue("switch", true) == "on" }
+// Bulb device is on if either zone is on. Zones pass their new value so this
+// never depends on reading it back from the hub.
+void updateParentSwitch(Integer zone = null, String value = null) {
+    String id = device.id.toString()
+    if (zone != null && value) ZONE_SWITCH.put("${id}-${zone}".toString(), value)
+    boolean anyOn = [1, 2].any { int z ->
+        String v = ZONE_SWITCH.get("${id}-${z}".toString())
+        if (v == null) v = getChildDevice(zoneDni(z))?.currentValue("switch")
+        v == "on"
+    }
     String v = anyOn ? "on" : "off"
-    if (device.currentValue("switch") != v) {
+    String last = ZONE_SWITCH.get("${id}-parent".toString()) ?: device.currentValue("switch")
+    if (last != v) {
+        ZONE_SWITCH.put("${id}-parent".toString(), v)
         sendEvent(name: "switch", value: v, descriptionText: "${device.displayName} is ${v}")
         if (txtEnable) log.info "${device.displayName} is ${v}"
     }
