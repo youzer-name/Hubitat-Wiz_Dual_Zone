@@ -1,12 +1,12 @@
 {
   "packageName": "WiZ Dual Zone",
   "author": "youzer-name",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "minimumHEVersion": "2.3.0",
   "dateReleased": "2026-10-28",
   "documentationLink": "https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone#readme",
   "communityLink": "",
-  "releaseNotes": "Group devices now follow their members: brightness is the average of the members that are on; color, color temperature and effect update when those members agree.",
+  "releaseNotes": "Discovery asks you to click Done before the first search (Hubitat doesn't run an app's scheduled jobs until it's installed). Adds the MIT license.",
   "apps": [
     {
       "id": "b3de78e7-b050-4476-8c75-89cbb2c05033",
@@ -49,5 +49,6 @@
       "location": "https://raw.githubusercontent.com/youzer-name/Hubitat-Wiz_Dual_Zone/main/WizDualZoneGroupDevice.groovy",
       "required": true
     }
-  ]
+  ],
+  "licenseFile": "https://raw.githubusercontent.com/youzer-name/Hubitat-Wiz_Dual_Zone/main/LICENSE"
 }

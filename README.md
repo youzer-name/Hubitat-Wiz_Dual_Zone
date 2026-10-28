@@ -194,3 +194,10 @@ From `pywizlight` 0.6.5 / ha-wiz-dualzone, confirmed on these bulbs:
 - Hubitat UDP payloads must be sent as hex (`HubAction.Encoding.HEX_STRING`).
 - Hubitat apps can call only a device's *declared* commands on devices they don't
   own, which is why zone devices have an internal `applyGroupState` command.
+
+## License
+
+MIT. See [LICENSE](LICENSE). The WiZ scene list and color conversion are adapted from
+[pywizlight](https://github.com/sbidy/pywizlight) (MIT). Thanks to
+[ha-wiz-dualzone](https://github.com/chadkuester/ha-wiz-dualzone) for showing how the
+dual-zone protocol works.

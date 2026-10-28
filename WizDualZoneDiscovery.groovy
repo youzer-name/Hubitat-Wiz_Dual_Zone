@@ -55,7 +55,11 @@ def mainPage() {
             paragraph "The hub must be on the same network as the bulbs. Give each bulb a fixed IP " +
                     "address (a DHCP reservation in your router) if you can; if one changes, run a " +
                     "search again and its device is updated."
-            if (searching) {
+            if (app.getInstallationState() != "COMPLETE") {
+                // Hubitat doesn't run an app's scheduled jobs until it's installed,
+                // and the search depends on them.
+                paragraph "<b>Click Done to finish installing this app, then open it again to search.</b>"
+            } else if (searching) {
                 paragraph "<b>Searching...</b> checked ${PROGRESS.get('n') ?: 0} of 254 addresses; " +
                         "${FOUND.size()} WiZ device(s) found so far. This takes about 40 seconds."
             } else {
@@ -153,6 +157,7 @@ void appButtonHandler(String btn) {
 // ---------------------------------------------------------------------------
 
 void startSearch() {
+    if (app.getInstallationState() != "COMPLETE") return
     if (state.searching && now() < ((state.searchEnds ?: 0) as long)) return
     FOUND.clear()
     PROGRESS.put("n", 0)
