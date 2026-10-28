@@ -1,7 +1,7 @@
 /**
  *  WiZ Dual Zone Discovery (app)
  *
- *  Version 0.3.3
+ *  Version 0.3.4
  *  https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone (MIT License)
  *
  *  Finds WiZ dual-zone bulbs on the local network and creates a

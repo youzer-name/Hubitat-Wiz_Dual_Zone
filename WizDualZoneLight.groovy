@@ -1,7 +1,7 @@
 /**
  *  WiZ Dual Zone Light (child driver)
  *
- *  Version 0.3.3
+ *  Version 0.3.4
  *  https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone (MIT License)
  *
  *  One zone (main or ring) of a dual-zone WiZ bulb. Created automatically by
@@ -116,7 +116,10 @@ void parse(List<Map> events) {
 // Confirmed state from a WiZ Dual Zone Group (JSON list of events).
 void applyGroupState(String json) {
     def evts = new JsonSlurper().parseText(json)
-    if (evts instanceof List) parse(evts as List<Map>)
+    if (!(evts instanceof List)) return
+    parse(evts as List<Map>)
+    // Keep the bulb (parent) device's on/off in step with its zones.
+    if (evts.any { it.name == "switch" }) parent?.updateParentSwitch()
 }
 
 void parse(String description) {

@@ -1,12 +1,12 @@
 {
   "packageName": "WiZ Dual Zone",
   "author": "youzer-name",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "minimumHEVersion": "2.5.2",
   "dateReleased": "2026-10-28",
   "documentationLink": "https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone#readme",
   "communityLink": "",
-  "releaseNotes": "Adds version numbers and Import URLs to the code; requires hub firmware 2.5.2 or later.",
+  "releaseNotes": "The bulb (parent) device's on/off now updates right after a group command, instead of at the next poll.",
   "apps": [
     {
       "id": "38cced42-b712-4ca1-81ca-55501d08cec0",

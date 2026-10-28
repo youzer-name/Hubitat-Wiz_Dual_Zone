@@ -164,8 +164,6 @@ The bulb device has **on/off for both zones together**, **Refresh**, and a
   next poll.
 - **Transition times are ignored.** WiZ's local protocol has no fade/duration setting.
 - **"Rhythm" and WiZ custom modes** aren't in the effect list.
-- After a group command, a **parent (bulb) device's own on/off status** (not the child devices')
-  updates at its next poll.
 
 ## Troubleshooting
 

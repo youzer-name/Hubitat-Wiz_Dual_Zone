@@ -1,7 +1,7 @@
 /**
  *  WiZ Dual Zone Group (device driver)
  *
- *  Version 0.3.3
+ *  Version 0.3.4
  *  https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone (MIT License)
  *
  *  The light device for a "WiZ Dual Zone Group" app instance. Every command is
