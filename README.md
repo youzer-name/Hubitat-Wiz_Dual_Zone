@@ -127,7 +127,9 @@ and rules **in place of the individual zones**.
 
 - If both zones of a bulb are in the same group, they share a single message.
 - Member zone devices update as each bulb confirms the change.
-- The group shows **on** whenever any member is on.
+- The group shows **on** whenever any member is on. Its brightness is the average of
+  the members that are on. Its color, color temperature and effect follow the members
+  when all the ones that are on match; otherwise it keeps the last value it had.
 
 ### Step 4 (optional): Share with another hub
 

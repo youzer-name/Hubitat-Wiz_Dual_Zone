@@ -1,12 +1,12 @@
 {
   "packageName": "WiZ Dual Zone",
   "author": "youzer-name",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "minimumHEVersion": "2.3.0",
   "dateReleased": "2026-10-28",
   "documentationLink": "https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone#readme",
   "communityLink": "",
-  "releaseNotes": "Adds WiZ Dual Zone Discovery: finds dual-zone bulbs on the network, creates their devices, and follows IP address changes by MAC.",
+  "releaseNotes": "Group devices now follow their members: brightness is the average of the members that are on; color, color temperature and effect update when those members agree.",
   "apps": [
     {
       "id": "b3de78e7-b050-4476-8c75-89cbb2c05033",

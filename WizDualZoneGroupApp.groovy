@@ -11,6 +11,10 @@
  *  - Each packet is resent until the bulb confirms it (or ~13 s pass).
  *  - Confirmed changes are pushed to the member zone devices so their state
  *    stays correct.
+ *  - The group device follows its members: on if any member is on; brightness
+ *    is the average of the members that are on; color, color temperature and
+ *    effect update when all members that are on agree (otherwise the group
+ *    keeps its last value).
  *
  *  Install one instance of this app per group.
  */
@@ -30,6 +34,12 @@ import java.util.concurrent.ConcurrentHashMap
 // Cached membership per app: ip -> [zones: [1,2], ids: [deviceId, ...]]
 @Field static final ConcurrentHashMap<String, Map> MEMBERS = new ConcurrentHashMap()
 @Field static final ConcurrentHashMap<String, Integer> MSG_IDS = new ConcurrentHashMap()
+
+// Member attributes the group shows when every member that's on agrees.
+// (Brightness is handled separately: the average of the members that are on.)
+@Field static final List<String> FOLLOW_ATTRS = ["colorMode", "colorTemperature", "hue", "saturation", "color",
+                                                 "colorName", "effectName", "effectSpeed"]
+@Field static final Map<String, String> UNITS = [level: "%", colorTemperature: "K", saturation: "%"]
 
 @Field static final Map<Integer, String> SCENES = [
     1: "Ocean", 2: "Romance", 3: "Sunset", 4: "Party", 5: "Fireplace", 6: "Cozy",
@@ -99,6 +109,7 @@ void initialize() {
     buildMembers()
     subscribe(zones, "switch", "memberSwitchHandler")
     subscribe(zones, "bulbIp", "memberIpHandler")
+    (["level"] + FOLLOW_ATTRS).each { subscribe(zones, it, "memberStateHandler") }
     memberSwitchHandler(null)
     if (logEnable) runIn(1800, "logsOff")
 }
@@ -311,6 +322,36 @@ void memberSwitchHandler(evt) {
     if (!dev) return
     boolean anyOn = zones?.any { it.currentValue("switch") == "on" }
     dev.parse([[name: "switch", value: anyOn ? "on" : "off"]])
+    memberStateHandler(evt)
+}
+
+// Members' changes come in bursts (one per bulb), so summarize once they settle.
+void memberStateHandler(evt) {
+    runInMillis(400, "summarizeMembers", [overwrite: true])
+}
+
+void summarizeMembers() {
+    def dev = groupDevice()
+    if (!dev) return
+    List on = (zones ?: []).findAll { it.currentValue("switch") == "on" }
+    if (!on) return
+    List evts = []
+    List levels = on.collect { it.currentValue("level") }.findAll { it != null }
+    if (levels) {
+        BigDecimal total = levels.sum { it as BigDecimal } as BigDecimal
+        int avg = (total / levels.size()).setScale(0, java.math.RoundingMode.HALF_UP) as int
+        evts << [name: "level", value: avg, unit: "%"]
+    }
+    FOLLOW_ATTRS.each { String a ->
+        def first = on[0].currentValue(a)
+        if (first == null) return
+        if (on.every { "${it.currentValue(a)}" == "${first}" }) {
+            Map e = [name: a, value: first]
+            if (UNITS[a]) e.unit = UNITS[a]
+            evts << e
+        }
+    }
+    if (evts) dev.parse(evts)
 }
 
 // ---------------------------------------------------------------------------
