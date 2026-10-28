@@ -1,7 +1,7 @@
 /**
  *  WiZ Dual Zone Bulb (parent driver)
  *
- *  Version 0.3.5
+ *  Version 1.0.0
  *  https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone (MIT License)
  *
  *  Talks to one dual-zone WiZ bulb over local UDP (port 38899) and creates two

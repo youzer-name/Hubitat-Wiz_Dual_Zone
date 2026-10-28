@@ -1,12 +1,12 @@
 {
   "packageName": "WiZ Dual Zone",
   "author": "youzer-name",
-  "version": "0.3.5",
+  "version": "1.0.0",
   "minimumHEVersion": "2.5.2",
   "dateReleased": "2026-10-28",
   "documentationLink": "https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone#readme",
   "communityLink": "",
-  "releaseNotes": "Fixes the bulb (parent) device sometimes missing an on/off change made through a group.",
+  "releaseNotes": "First public release.",
   "apps": [
     {
       "id": "38cced42-b712-4ca1-81ca-55501d08cec0",
