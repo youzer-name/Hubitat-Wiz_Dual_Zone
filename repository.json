@@ -13,6 +13,18 @@
         "Automations & Groups"
       ],
       "id": "c71046ce-7ca6-4299-a24e-1d9690bcf1d7"
+    },
+    {
+      "name": "MQTT Manager",
+      "category": "Integrations",
+      "location": "https://raw.githubusercontent.com/youzer-name/Hubitat-MQTT-Manager/main/packageManifest.json",
+      "description": "MQTT topics as Hubitat devices: payload, switch, button and notification per topic, wildcards, and publish from rules.",
+      "tags": [
+        "MQTT",
+        "LAN",
+        "Automations & Groups"
+      ],
+      "id": "aae97e10-9b16-436a-ba33-70facffb160b"
     }
   ]
 }
