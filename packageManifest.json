@@ -1,12 +1,12 @@
 {
   "packageName": "WiZ Dual Zone",
   "author": "youzer-name",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "minimumHEVersion": "2.5.2",
-  "dateReleased": "2026-10-28",
+  "dateReleased": "2026-11-09",
   "documentationLink": "https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone#readme",
   "communityLink": "https://community.hubitat.com/t/release-wiz-dual-zone-improved-app-driver-for-wiz-dual-zone-bulbs/167101",
-  "releaseNotes": "Discovery sets up new bulbs one at a time, so creating many at once no longer overloads the hub.",
+  "releaseNotes": "Groups now keep their on/off state in step with the bulbs. Previously, a command that arrived right after Off (for example from Adaptive Lighting) could turn the bulbs back on while the group still showed off.",
   "apps": [
     {
       "id": "38cced42-b712-4ca1-81ca-55501d08cec0",

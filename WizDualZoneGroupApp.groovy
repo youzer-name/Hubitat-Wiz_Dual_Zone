@@ -1,7 +1,7 @@
 /**
  *  WiZ Dual Zone Group (app)
  *
- *  Version 1.0.1
+ *  Version 1.0.2
  *  https://github.com/youzer-name/Hubitat-Wiz_Dual_Zone (MIT License)
  *
  *  Groups any number of "WiZ Dual Zone Light" zone devices behind one light
@@ -338,8 +338,14 @@ void summarizeMembers() {
     def dev = groupDevice()
     if (!dev) return
     List on = (zones ?: []).findAll { it.currentValue("switch") == "on" }
-    if (!on) return
-    List evts = []
+    // Recheck on/off too. If a command overtakes an off before the bulbs reply,
+    // the members never change switch, so memberSwitchHandler never runs and
+    // the group would stay "off" while the bulbs are on.
+    if (!on) {
+        dev.parse([[name: "switch", value: "off"]])
+        return
+    }
+    List evts = [[name: "switch", value: "on"]]
     List levels = on.collect { it.currentValue("level") }.findAll { it != null }
     if (levels) {
         BigDecimal total = levels.sum { it as BigDecimal } as BigDecimal
