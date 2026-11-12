@@ -1,0 +1,21 @@
+# --- Private / personal files: never commit (added 2026-11-12) ---
+# Secrets and credentials
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*secret*
+*secrets*
+*credential*
+*.token
+# Hub backups, exports and logs (can hold device names, IPs, tokens)
+/backups/
+*.lzf
+*.log
+# Local editor / tool settings
+.claude/settings.local.json
+.vscode/
+.idea/
+.DS_Store
